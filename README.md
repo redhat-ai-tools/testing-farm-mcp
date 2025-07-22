@@ -172,8 +172,6 @@ make build
 # Run container (stdio)
 make run
 
-# Run container (SSE)
-make run-sse
 
 # Clean up
 make clean
@@ -189,16 +187,6 @@ make clean
 | `make clean` | Clean up container image |
 | `make cursor-config` | Configure Cursor IDE |
 
-## Transport Mode Comparison
-
-| Feature | stdio | SSE |
-|---------|-------|-----|
-| **Use Case** | IDE integration, CLI tools | Web apps, debugging, multi-client |
-| **Process Model** | Subprocess of MCP client | Independent server process |
-| **Network** | None (pipes) | HTTP on configurable port |
-| **Clients** | Single | Multiple concurrent |
-| **Resource Usage** | Lower | Slightly higher |
-| **Setup Complexity** | Simple | Requires port management |
 
 ## Troubleshooting
 
@@ -223,10 +211,7 @@ make clean
 ## API Token Setup
 
 1. **Get Testing Farm API Token**:
-   - Visit [Testing Farm Console](https://console.testing-farm.io)
-   - Sign in with your account
-   - Navigate to API tokens section
-   - Generate a new token
+   - Contact with Testing Farm to get an API token
 
 2. **Configure Token**:
    ```bash
@@ -240,17 +225,17 @@ make clean
 testing-farm-mcp/
 ├── server.py              # Main MCP server implementation
 ├── requirements.txt       # Python dependencies
-├── Containerfile         # Container build configuration
-├── Makefile              # Build and run commands
-├── example.env           # Environment variables template
-├── example.mcp.json      # MCP client configuration examples
-└── README.md             # This file
+├── Containerfile          # Container build configuration
+├── Makefile               # Build and run commands
+├── example.env            # Environment variables template
+├── example.mcp.json       # MCP client configuration examples
+└── README.md              # This file
 ```
 
 ## Dependencies
 
 - `httpx` - HTTP client for API requests
-- `fastmcp` - MCP server framework
+- `mcp`   - MCP server framework
 - `python-dotenv` - Environment variable loading
 
 ## Contributing
