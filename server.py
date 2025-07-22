@@ -194,14 +194,14 @@ async def analyze_job(job_id: str) -> str:
         job_data = await get_job_status_data(job_id)
 
         if not job_data:
-            return f"❌ Could not retrieve job data for {job_id}"
+            return f"Could not retrieve job data for {job_id}"
 
         state = job_data.get("state", "unknown")
         result = job_data.get("result", {})
 
         # Handle running jobs
         if state in ["new", "pending", "running"]:
-            return f"⏳ Job {job_id} is still {state}. Please wait for completion."
+            return f"Job {job_id} is still {state}. Please wait for completion."
 
         # Handle completed jobs
         if state == "complete":
@@ -214,11 +214,11 @@ async def analyze_job(job_id: str) -> str:
             # Success case
             if overall_result in ["passed", "pass", "success"]:
                 summary = [
-                    f"✅ Job {job_id} completed successfully",
-                    f"   State: {state}",
-                    f"   Result: {overall_result}",
-                    f"   Created: {job_data.get('created', 'unknown')}",
-                    f"   Updated: {job_data.get('updated', 'unknown')}"
+                    f"Job {job_id} completed successfully",
+                    f"State: {state}",
+                    f"Result: {overall_result}",
+                    f"Created: {job_data.get('created', 'unknown')}",
+                    f"Updated: {job_data.get('updated', 'unknown')}"
                 ]
 
                 # Add environment info if available
@@ -234,13 +234,12 @@ async def analyze_job(job_id: str) -> str:
             # Failure case - find the reason
             else:
                 analysis = [
-                    f"❌ Job {job_id} failed",
-                    f"   State: {state}",
-                    f"   Result: {overall_result}",
-                    f"   Created: {job_data.get('created', 'unknown')}",
-                    f"   Updated: {job_data.get('updated', 'unknown')}",
+                    f"Job {job_id} failed",
+                    f"State: {state}",
+                    f"Result: {overall_result}",
+                    f"Created: {job_data.get('created', 'unknown')}",
+                    f"Updated: {job_data.get('updated', 'unknown')}",
                     "",
-                    "🔍 Investigating failure reason..."
                 ]
 
                 # Get XML results to find logs
@@ -251,29 +250,29 @@ async def analyze_job(job_id: str) -> str:
                     # Extract failed tests
                     failed_tests = extract_failed_tests_from_xml(xml_content)
                     if failed_tests:
-                        analysis.append("\n📋 Failed Tests:")
+                        analysis.append("\nFailed Tests:")
                         for test in failed_tests:
                             analysis.append(f"   • {test['name']}: {test['result']}")
 
                     # Extract log URLs and find failure reason
                     log_urls = extract_log_urls_from_xml(xml_content)
                     if log_urls:
-                        analysis.append(f"\n🔍 Checking {len(log_urls)} available logs...")
+                        analysis.append(f"\nChecking {len(log_urls)} available logs...")
                         failure_reason = await find_failure_reason(log_urls)
-                        analysis.append("\n💥 Failure Details:")
+                        analysis.append("\nFailure Details:")
                         analysis.append(failure_reason)
                     else:
-                        analysis.append("\n❓ No detailed logs available for analysis")
+                        analysis.append("\nNo detailed logs available for analysis")
                 else:
-                    analysis.append("\n❓ No XML results available - job may have failed during setup")
+                    analysis.append("\nNo XML results available - job may have failed during setup")
 
                 return "\n".join(analysis)
 
         # Unknown state
-        return f"❓ Job {job_id} is in unknown state: {state}"
+        return f"Job {job_id} is in unknown state: {state}"
 
     except Exception as e:
-        return f"❌ Error analyzing job {job_id}: {str(e)}"
+        return f"Error analyzing job {job_id}: {str(e)}"
 
 
 # Transport Setup
