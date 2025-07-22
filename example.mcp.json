@@ -1,23 +1,22 @@
 {
   "mcpServers": {
-    "TestingFarmMcp": {
+    "TestingFarmMcp-stdio": {
       "command": "podman",
       "args": [
         "run",
-        "-d",
+        "-i",
         "--rm",
-        "--name", "testing-farm-mcp-sse",
-        "-p", "8000:8000",
         "--env-file",
         "~/.testing-farm-mcp.env",
-        "-e", "MCP_TRANSPORT=sse",
-        "-e", "MCP_PORT=8000",
+        "-e", "MCP_TRANSPORT=stdio",
         "localhost/testing-farm-mcp:latest"
       ],
-      "transport": {
-        "type": "sse",
-        "url": "http://localhost:8000"
-      },
+      "description": "Testing Farm MCP server using stdio transport(containerized)"
+    },
+    "TestingFarmMcp-sse": {
+      "transport": "sse",
+      "url": "http://localhost:8000/sse",
+      "name": "Testing Farm MCP server",
       "description": "Testing Farm MCP server using SSE transport with port 8000 (containerized)"
     }
   }

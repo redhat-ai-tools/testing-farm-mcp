@@ -19,22 +19,11 @@ build:
 run:
 	@echo "🚀 Running Testing Farm MCP Server with stdio transport..."
 	@echo "   Use Ctrl-D to quit nicely"
-	podman run -i --tty --rm --env-file $(ENV_FILE) \
-		-e MCP_TRANSPORT=stdio \
+	podman run -i --rm --network host --env-file $(ENV_FILE) \
+		--name testing-farm-mcp \
+		-p ${DEFAULT_PORT}:${DEFAULT_PORT} \
 		$(IMG)
 
-# Run with SSE transport
-run-sse:
-	@echo "🚀 Running Testing Farm MCP Server with SSE transport on port $(DEFAULT_PORT)..."
-	@echo "   Server will be available at http://localhost:$(DEFAULT_PORT)"
-	@echo "   Use Ctrl-C to stop"
-	podman run -i --rm \
-		--network host \
-		-p $(DEFAULT_PORT):$(DEFAULT_PORT) \
-		--env-file $(ENV_FILE) \
-		-e MCP_TRANSPORT=sse \
-		-e MCP_PORT=$(DEFAULT_PORT) \
-		$(IMG)
 
 # Clean up container image
 clean:
@@ -64,7 +53,6 @@ setup: build cursor-config $(ENV_FILE)
 	@echo "🎉 Setup complete! Next steps:"
 	@echo ""
 	@echo "1. Edit $(ENV_FILE) and set your Testing Farm API token"
-	@echo "2. Choose a run mode:"
+	@echo "2. Run the server:"
 	@echo "   • make run      # stdio transport (default)"
-	@echo "   • make run-sse  # SSE transport"
 	@echo ""

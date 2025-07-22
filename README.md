@@ -55,16 +55,11 @@ Edit `~/.testing-farm-mcp.env` and set your Testing Farm API token:
 TESTING_FARM_API_TOKEN=your_actual_token_here
 ```
 
-### 3. Choose Your Transport Mode
+### 3. Run the server
 
 #### stdio Transport (Default)
 ```bash
 make run
-```
-
-#### SSE Transport
-```bash
-make run-sse
 ```
 
 ## Configuration
@@ -94,11 +89,16 @@ Add to your MCP client configuration (e.g., `~/.cursor/mcp.json`):
     "TestingFarmMcp-stdio": {
       "command": "podman",
       "args": [
-        "run", "-i", "--rm",
-        "--env-file", "~/.testing-farm-mcp.env",
+        "run",
+        "-i",
+        "--rm",
+        "--env-file",
+        "~/.testing-farm-mcp.env",
+        "-e",
+        "MCP_TRANSPORT=stdio",
         "localhost/testing-farm-mcp:latest"
       ],
-      "description": "Testing Farm MCP server using stdio transport (containerized)"
+      "description": "Testing Farm MCP server using stdio transport(containerized)"
     }
   }
 }
@@ -110,23 +110,11 @@ Add to your MCP client configuration (e.g., `~/.cursor/mcp.json`):
 {
   "mcpServers": {
     "TestingFarmMcp-sse": {
-      "command": "podman",
-      "args": [
-        "run", "-d", "--rm",
-        "--name", "testing-farm-mcp-sse",
-        "-p", "8000:8000",
-        "--env-file", "~/.testing-farm-mcp.env",
-        "-e", "MCP_TRANSPORT=sse",
-        "-e", "MCP_PORT=8000",
-        "localhost/testing-farm-mcp:latest"
-      ],
-      "transport": {
-        "type": "sse",
-        "url": "http://localhost:8000"
-      },
+      "transport": "sse",
+      "url": "http://localhost:8000/sse",
+      "name": "Testing Farm MCP server",
       "description": "Testing Farm MCP server using SSE transport with port 8000 (containerized)"
     }
-  }
 }
 ```
 
@@ -197,8 +185,7 @@ make clean
 |---------|-------------|
 | `make setup` | Complete setup: build, configure Cursor, create env file |
 | `make build` | Build container image |
-| `make run` | Run with stdio transport (default) |
-| `make run-sse` | Run with SSE transport |
+| `make run` | Run MCP server with stdio transport (default) |
 | `make clean` | Clean up container image |
 | `make cursor-config` | Configure Cursor IDE |
 
@@ -276,7 +263,21 @@ testing-farm-mcp/
 
 ## License
 
-[Add your license information here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**MIT License**
+
+Copyright (c) 2025 Red Hat AI Tools
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 ---
 

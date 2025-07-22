@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from typing import Any, Dict, Optional
 
 import httpx
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 
 # Configuration
 logging.basicConfig(level=logging.INFO)
@@ -23,12 +23,17 @@ TESTING_FARM_ARTIFACTS_URL = os.getenv(
 )
 MCP_TRANSPORT = os.getenv("MCP_TRANSPORT", "stdio")
 MCP_PORT = int(os.getenv("MCP_PORT", "8000"))
+MCP_HOST = os.getenv("MCP_HOST", "127.0.0.1")
 
 if not TESTING_FARM_API_TOKEN:
     logger.warning("TESTING_FARM_API_TOKEN not set, some operations may fail")
 
 # MCP Server Setup
-mcp = FastMCP("Testing-Farm MCP Server")
+mcp = FastMCP(
+    name="Testing-Farm MCP Server",
+    host=MCP_HOST,
+    port=MCP_PORT,
+)
 
 # Helper Functions
 async def fetch_content(url: str) -> Optional[str]:
@@ -278,7 +283,7 @@ def main():
 
     if transport == "sse":
         logger.info(f"Starting Testing Farm MCP Server with SSE transport on port {MCP_PORT}")
-        mcp.run(transport="sse", port=MCP_PORT)
+        mcp.run(transport="sse")
     else:
         logger.info("Starting Testing Farm MCP Server with stdio transport")
         mcp.run(transport="stdio")
